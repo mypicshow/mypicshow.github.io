@@ -9,7 +9,7 @@
 <meta property="og:title" content="My Pic Show">
 <meta property="og:description" content="Photographs and albums. Tap a photo to see it full size.">
 <meta property="og:url" content="https://mypicshow.github.io/">
-<meta property="og:image" content="https://mypicshow.github.io/photos/test/dsc2958-edit-thumb.jpg">
+<meta property="og:image" content="https://mypicshow.github.io/photos/test/desktop-image-001-thumb.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -199,11 +199,11 @@ body.clean .foot,body.clean .intro{display:none}
 body.clean #view{padding-block:16px 12px}
 body.clean .lb{grid-template-rows:minmax(0,1fr)}
 body.clean .lb-top,body.clean .lb-info,body.clean .buy,body.clean .lb-strip{display:none}
-/* phone held sideways: the viewer becomes just the picture, edge to edge. Swipe for the next one; tap to bring the buttons back. */
+/* phone held sideways: the viewer becomes just the picture, edge to edge. Swipe for the next one; tap to bring the buttons back.
+   It still scrolls a little (the picture stays put), so a swipe up lets Safari tuck its bars away. */
 @media (orientation:landscape) and (max-height:520px){
-  /* The viewer scrolls a little (the picture stays put) so a swipe up lets Safari tuck its bars away. */
-  .lb{display:block;padding:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#000}
-  .lb::after{content:"";display:block;height:160px}
+  .lb{display:block;padding:0;overflow-x:hidden;overflow-y:auto;background:#000}
+  .lb::after{content:"";display:block;height:80px}
   .lb>.lb-stage{padding:0;min-height:0;position:sticky;top:0;height:100%}
   .lb-stage img{inset:0;left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);width:calc(100% - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));height:100%}
   .lb-nav,.lb-info,.buy,.lb-strip,#lb-full,body.clean .lb:not([hidden]) ~ .exit-full{display:none}
@@ -750,7 +750,7 @@ $('#brand').setAttribute('aria-label',SITE.title+' home');
 if(!DEMO)document.title=SITE.title;
 $('#foot').textContent=DEMO
   ?'Mock-up with drawn example photos and example prices. Your own pictures replace them when you publish.'
-  :'© '+new Date().getFullYear()+' '+SITE.title;
+  :'© '+new Date().getFullYear()+' '+SITE.title+' · version 5';
 
 window.addEventListener('hashchange',function(){route(false)});
 route(true);
