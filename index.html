@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
 <script>try{var __t=localStorage.getItem('mypicshow-theme');if(__t==='light'||__t==='dark')document.documentElement.setAttribute('data-theme',__t)}catch(e){}</script>
 <style>
-/* Layout: sticky header over one centred column. Photos sit in justified rows (Flickr-style mosaic). A full-screen viewer opens on top for a single photo. */
+/* Layout: sticky header and a full-width page, about 1 cm in from each edge. Photos sit in justified rows (Flickr-style mosaic). A full-screen viewer opens on top for a single photo. */
 :root{
   --bg:#f3f6f5; --surface:#ffffff; --fg:#13201f; --muted:#566866; --line:#d8e1df; --tile:#e2eae8;
   --accent:#0a766f; --accent-fg:#ffffff;
@@ -29,18 +29,18 @@
   --font-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --font-display:"Space Grotesk","Inter",system-ui,-apple-system,sans-serif;
   --font-brand:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter",system-ui,"Segoe UI",Roboto,sans-serif;
-  --gap:6px; --maxw:1180px;
+  --gap:6px; --gutter:clamp(16px,4vw,40px); --tab-line:#1f6feb;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#0d1413; --surface:#141d1c; --fg:#e7efee; --muted:#93a7a4; --line:#243230; --tile:#1b2625;
-    --accent:#5ccfc6; --accent-fg:#06211f; color-scheme:dark;
+    --accent:#5ccfc6; --accent-fg:#06211f; --tab-line:#5aa2ff; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0d1413; --surface:#141d1c; --fg:#e7efee; --muted:#93a7a4; --line:#243230; --tile:#1b2625;
-  --accent:#5ccfc6; --accent-fg:#06211f; color-scheme:dark;
+  --accent:#5ccfc6; --accent-fg:#06211f; --tab-line:#5aa2ff; color-scheme:dark;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -56,41 +56,57 @@ h1,h2,h3,p{margin:0}
 h1,h2{font-family:var(--font-display);letter-spacing:-.015em;text-wrap:balance}
 h1{font-size:clamp(28px,5vw,40px);line-height:1.08;font-weight:700}
 h2{font-size:20px;line-height:1.2;font-weight:700}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .sub{color:var(--muted);max-width:60ch}
 
-.inner{max-width:var(--maxw);margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.inner{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
 
-/* header */
+/* header: logo left, tabs in the middle, buttons right */
 .site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
-.head-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:10px}
-.brand{display:inline-flex;align-items:center;gap:10px;font:500 20px/1 var(--font-brand);text-decoration:none}
-.brand .logo{width:40px;height:40px;border-radius:22.4%;box-shadow:0 0 0 1px var(--line)}
-.pill{font:500 11px/1 var(--font-body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
-.nav{display:flex;gap:2px;margin-left:6px}
-.nav a{padding:8px 10px;border-radius:6px;text-decoration:none;color:var(--muted);font-weight:500}
-.nav a:hover{color:var(--fg)}
-.nav a[aria-current="page"]{color:var(--fg);background:var(--tile)}
-.head-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
-.hbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line);background:var(--surface);border-radius:999px;cursor:pointer;font-weight:500}
+.head-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"brand tabs actions";column-gap:16px;align-items:stretch}
+.brand{grid-area:brand;justify-self:start;align-self:center;min-width:0;max-width:100%;display:inline-flex;align-items:center;gap:10px;padding-block:10px;font:500 20px/1 var(--font-brand);text-decoration:none}
+.brand .logo{flex:none;width:48px;height:48px;border-radius:22.4%;box-shadow:0 0 0 1px var(--line)}
+#brand-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tabs{grid-area:tabs;display:flex;gap:clamp(18px,3vw,44px)}
+.tab{display:flex;align-items:center;padding:0 2px;margin-bottom:-1px;border-bottom:3px solid transparent;color:var(--muted);font:500 16px/1 var(--font-brand);text-decoration:none;white-space:nowrap}
+.tab:hover{color:var(--fg)}
+.tab[aria-current="page"]{color:var(--fg);border-bottom-color:var(--tab-line)}
+.head-actions{grid-area:actions;justify-self:end;align-self:center;display:flex;align-items:center;gap:8px}
+.hbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line);background:var(--surface);border-radius:999px;cursor:pointer;font-weight:500;white-space:nowrap}
 .hbtn:hover{border-color:var(--muted)}
+@media (max-width:760px){
+  .head-row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand actions" "tabs tabs";column-gap:8px}
+  .tabs{justify-content:center;height:44px}
+}
 @media (max-width:640px){.hbtn{width:40px;padding:0}.hbtn span{display:none}}
-@media (max-width:560px){.nav{order:3;flex-basis:100%;margin-left:-10px}}
 
 /* page */
-#view{display:flex;flex-direction:column;gap:32px;padding-block:24px 56px}
+#view{display:flex;flex-direction:column;gap:28px;padding-block:28px 56px}
 .intro{display:flex;flex-direction:column;gap:8px}
 .sec{display:flex;flex-direction:column;gap:14px}
 .crumb{display:inline-block;color:var(--muted);text-decoration:none;font-weight:500;margin-bottom:6px}
 .crumb:hover{color:var(--fg)}
 
-.albums{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px 12px}
-.album-card{position:relative}
-.album-link{display:flex;flex-direction:column;text-decoration:none}
-.cover{aspect-ratio:4/3;max-width:100%;overflow:hidden;border-radius:4px;background:var(--tile);margin-bottom:8px}
-.cover img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
-.album-link:hover .cover img,.album-link:focus-visible .cover img{transform:scale(1.04)}
-.a-name{font-weight:600}
-.a-count{color:var(--muted);font-size:13px}
+/* albums: square covers, name and count over a dark fade, a stacked-paper edge on top */
+.albums{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:40px 28px;padding-top:10px}
+.acard{position:relative}
+.acard::before,.acard::after{content:"";position:absolute;height:1px;background:var(--muted);pointer-events:none}
+.acard::before{top:-9px;left:22px;right:22px;opacity:.45}
+.acard::after{top:-5px;left:11px;right:11px;opacity:.8}
+.acard-link{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;background:var(--tile);color:#fff;text-decoration:none}
+.acard-link img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.acard-link:hover img,.acard-link:focus-visible img{transform:scale(1.03)}
+.acard-link::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0,rgba(0,0,0,.55) 26%,rgba(0,0,0,0) 62%)}
+.acard-text{position:absolute;left:0;right:0;bottom:0;z-index:1;display:flex;flex-direction:column;gap:7px;padding:0 64px 20px 20px}
+.acard-name{font:300 clamp(22px,1.9vw,32px)/1.12 var(--font-brand);text-shadow:0 1px 8px rgba(0,0,0,.4);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.acard-meta{font:500 14px/1.2 var(--font-brand);text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.acard-meta i{font-style:normal;margin:0 .3em}
+@media (max-width:560px){
+  .albums{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 14px}
+  .acard-text{padding:0 12px 14px 14px}
+  .acard-name{font-size:20px}
+  .acard-meta{font-size:12.5px}
+}
 
 .photo-grid{display:flex;flex-direction:column;gap:var(--gap)}
 .row{display:flex;gap:var(--gap)}
@@ -110,7 +126,8 @@ h2{font-size:20px;line-height:1.2;font-weight:700}
 .chip{position:absolute;top:8px;right:8px;z-index:2;display:grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:rgba(10,15,15,.62);color:#fff;cursor:pointer;transition:opacity .15s,background .15s}
 .chip:hover{background:rgba(10,15,15,.84)}
 .tile .chip{top:6px;right:6px;width:34px;height:34px}
-@media (hover:hover){.tile .chip{opacity:0}.tile:hover .chip,.tile:focus-within .chip{opacity:1}}
+.acard .chip{top:auto;bottom:16px;right:16px;width:38px;height:38px}
+@media (hover:hover){.tile .chip,.acard .chip{opacity:0}.tile:hover .chip,.tile:focus-within .chip,.acard:hover .chip,.acard:focus-within .chip{opacity:1}}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translate(-50%,12px);z-index:40;max-width:calc(100vw - 32px);padding:10px 16px;border-radius:999px;background:var(--fg);color:var(--bg);font-weight:500;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .sheet{position:fixed;inset:0;z-index:50;display:grid;align-items:end;justify-items:center;background:rgba(0,0,0,.5);padding-top:calc(env(safe-area-inset-top,0px) + 16px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -174,15 +191,15 @@ a.opt{text-decoration:none;color:var(--lb-fg)}
 .th{flex:none;height:52px;padding:0;border:2px solid transparent;border-radius:4px;overflow:hidden;background:var(--lb-btn);cursor:pointer;opacity:.6}
 .th img{width:100%;height:100%;object-fit:cover}
 .th[aria-current="true"]{border-color:var(--lb-accent);opacity:1}
-/* full screen: hide the site furniture and keep the photos */
+/* full screen: the banner stays; headings and the footer go. In the photo viewer the title, thumbnails and buy panel go too. */
 .exit-full{display:none;position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:max(12px,env(safe-area-inset-right,0px));z-index:35;width:44px;height:44px;padding:0;place-items:center;border:0;border-radius:50%;background:rgba(10,15,15,.66);color:#fff;cursor:pointer}
 .exit-full:hover{background:rgba(10,15,15,.88)}
-body.clean .exit-full{display:grid}
-body.clean .site-head,body.clean .foot,body.clean .intro,body.clean .sec>h2{display:none}
-body.clean #view{padding-block:12px}
+body.clean .lb:not([hidden]) ~ .exit-full{display:grid}
+body.clean .foot,body.clean .intro{display:none}
+body.clean #view{padding-block:16px 12px}
 body.clean .lb{grid-template-rows:minmax(0,1fr)}
 body.clean .lb-top,body.clean .lb-info,body.clean .buy,body.clean .lb-strip{display:none}
-@media (max-width:560px){:root{--gap:4px}.lb-nav{width:40px;height:40px}}
+@media (max-width:560px){:root{--gap:4px}.lb-nav{width:40px;height:40px}.acard .chip{top:10px;bottom:auto;right:10px;width:34px;height:34px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -193,6 +210,10 @@ body.clean .lb-top,body.clean .lb-info,body.clean .buy,body.clean .lb-strip{disp
       <a class="brand" id="brand" href="#" aria-label="My Pic Show home">
         <img class="logo" src="icon.svg" alt="" width="32" height="32">        <span id="brand-name">My Pic Show</span>
       </a>
+      <nav class="tabs" aria-label="Main">
+        <a class="tab" href="#" data-r="all">All photos</a>
+        <a class="tab" href="#albums" data-r="albums">Albums</a>
+      </nav>
       <div class="head-actions">
         <button class="hbtn" id="full-btn" type="button" aria-label="Full screen"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>Full screen</span></button>
         <button class="hbtn" id="share-site" type="button" aria-label="Share site"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg><span>Share site</span></button>
@@ -273,7 +294,7 @@ function parseGallery(g){
       var sets=[[base+'-thumb.jpg',t[0]],[base+'-medium.jpg',m[0]],[base+'-large.jpg',l[0]]].sort(function(x,y){return x[1]-y[1]});
       var seen={},ss=[];
       sets.forEach(function(s){if(!seen[s[1]]){seen[s[1]]=1;ss.push(s[0]+' '+s[1]+'w')}});
-      var p={id:gp.id,title:gp.title,ar:l[0]/l[1],album:a,idx:pi,ow:gp.ow,oh:gp.oh,ww:l[0],wh:l[1],
+      var p={id:gp.id,title:gp.title,ar:l[0]/l[1],album:a,idx:pi,d:gp.d||'',ow:gp.ow,oh:gp.oh,ww:l[0],wh:l[1],
         src:base+'-thumb.jpg',full:base+'-medium.jpg',srcset:ss.join(', ')};
       a.photos.push(p);PHOTOS.push(p);
     });
@@ -342,7 +363,7 @@ function tileEl(p){
 function justify(box,photos){
   var W=Math.floor(box.clientWidth);if(!W)return;
   var gap=parseFloat(getComputedStyle(box).getPropertyValue('--gap'))||6;
-  var target=W<520?130:W<900?190:230;
+  var target=W<520?162:W<900?238:288;
   box.textContent='';
   var row=[],sum=0;
   function flush(last){
@@ -366,19 +387,20 @@ function mountGrid(box,photos){
 }
 
 /* ---------- views ---------- */
-function setNav(r){document.querySelectorAll('.nav a').forEach(function(a){if(a.getAttribute('data-r')===r)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')})}
+function setNav(r){document.querySelectorAll('.tab').forEach(function(a){if(a.getAttribute('data-r')===r)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')})}
 function plural(n,w){return n+' '+w+(n===1?'':'s')}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(d){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||''),mo=m?+m[2]:0;return mo>=1&&mo<=12?(+m[3])+' '+MON[mo-1]+' '+m[1]:''}
+/* An album's date is the date of its newest photo. */
+function albumDate(a){var best='';a.photos.forEach(function(p){if(p.d&&p.d>best)best=p.d});return fmtDate(best)}
 
 var PAGE=60;
+/* All photos: the front page, just the mixed tiles */
 function renderHome(){
-  setNav('home');
-  var cards=ALBUMS.map(function(a){return '<div class="album-card"><a class="album-link" href="#album-'+a.slug+'"><span class="cover"><img src="'+a.cover+'" alt="" loading="lazy" decoding="async"></span><span class="a-name">'+a.name+'</span><span class="a-count">'+plural(a.photos.length,'photo')+'</span></a><button class="chip" type="button" data-slug="'+a.slug+'" aria-label="Share album: '+a.name+'">'+SHARE_ICON+'</button></div>'}).join('');
+  setNav('all');
   view.innerHTML=
-    '<section class="sec" aria-labelledby="h-albums"><h2 id="h-albums">Albums</h2><div class="albums">'+cards+'</div></section>'+
-    '<section class="sec" aria-labelledby="h-all"><h2 id="h-all">All photos</h2><div class="photo-grid" id="grid"></div><div id="more-wrap" hidden><button class="btn" id="more" type="button"></button></div></section>';
-  view.querySelectorAll('.album-card .chip').forEach(function(c){
-    c.addEventListener('click',function(){var a=bySlug(c.getAttribute('data-slug'));doShare(albumUrl(a),a.name+' · '+SITE.title,'Album')});
-  });
+    '<h1 class="sr">All photos</h1><div class="photo-grid" id="grid"></div><div id="more-wrap" hidden><button class="btn" id="more" type="button"></button></div>';
   var shown=PAGE,setList=mountGrid($('#grid'),MIXED.slice(0,shown)),more=$('#more'),wrap=$('#more-wrap');
   function paintMore(){
     var left=MIXED.length-shown;wrap.hidden=left<=0;
@@ -388,12 +410,26 @@ function renderHome(){
   paintMore();
 }
 
+/* Albums: square covers with the name, photo count and date over a dark fade */
+function renderAlbums(){
+  setNav('albums');
+  var cards=ALBUMS.map(function(a){
+    var dt=albumDate(a);
+    return '<div class="acard"><a class="acard-link" href="#album-'+a.slug+'"><img src="'+a.cover+'" alt="" loading="lazy" decoding="async"><span class="acard-text"><span class="acard-name">'+esc(a.name)+'</span><span class="acard-meta">'+plural(a.photos.length,'photo')+(dt?' <i aria-hidden="true">\u2022</i> '+dt:'')+'</span></span></a><button class="chip" type="button" data-slug="'+a.slug+'" aria-label="Share album: '+esc(a.name)+'">'+SHARE_ICON+'</button></div>';
+  }).join('');
+  view.innerHTML='<h1 class="sr">Albums</h1><div class="albums">'+cards+'</div>';
+  view.querySelectorAll('.acard .chip').forEach(function(c){
+    c.addEventListener('click',function(){var a=bySlug(c.getAttribute('data-slug'));doShare(albumUrl(a),a.name+' \u00b7 '+SITE.title,'Album')});
+  });
+}
+
 function renderAlbum(a){
-  setNav('home');
+  setNav('albums');
+  var dt=albumDate(a);
   view.innerHTML=
-    '<div class="intro"><a class="crumb" href="#">‹ All photos</a><div class="head-line"><h1>'+a.name+'</h1><button class="btn share-btn" id="share-album" type="button">'+SHARE_ICON+'<span>Share album</span></button></div><p class="sub">'+a.blurb+' '+plural(a.photos.length,'photo')+'.</p></div>'+
+    '<div class="intro"><a class="crumb" href="#albums">\u2039 Albums</a><div class="head-line"><h1>'+esc(a.name)+'</h1><button class="btn share-btn" id="share-album" type="button">'+SHARE_ICON+'<span>Share album</span></button></div><p class="sub">'+(a.blurb?esc(a.blurb)+' ':'')+plural(a.photos.length,'photo')+(dt?' \u00b7 '+dt:'')+'</p></div>'+
     '<div class="photo-grid" id="grid"></div>';
-  $('#share-album').addEventListener('click',function(){doShare(albumUrl(a),a.name+' · '+SITE.title,'Album')});
+  $('#share-album').addEventListener('click',function(){doShare(albumUrl(a),a.name+' \u00b7 '+SITE.title,'Album')});
   mountGrid($('#grid'),a.photos);
 }
 
@@ -426,7 +462,7 @@ function route(first){
   var m=/^photo-(.+?)--(.+)$/.exec(h),pa=m?bySlug(m[1]):null,pp=null;
   if(pa)pa.photos.forEach(function(x){if(x.id===m[2])pp=x});
   if(pp)renderAlbum(pa);
-  else if(a)renderAlbum(a);else if(DEMO&&h==='how-it-works')renderHow();else renderHome();
+  else if(a)renderAlbum(a);else if(h==='albums')renderAlbums();else if(DEMO&&h==='how-it-works')renderHow();else renderHome();
   if(!first)window.scrollTo(0,0);
   if(pp)openLB(pp,null);
 }
@@ -520,24 +556,29 @@ buyToggle.addEventListener('click',function(){
   var open=buyPanel.hidden;buyPanel.hidden=!open;buyToggle.setAttribute('aria-expanded',String(open));
 });
 
-/* ---------- full screen: hides the header, footer and headings; the browser goes full screen too where it can ---------- */
-var exitBtn=$('#exit-full');
+/* ---------- full screen: keeps the banner, hides headings and the footer; the browser goes full screen too where it can ---------- */
+var exitBtn=$('#exit-full'),fullBtn=$('#full-btn');
+var EXPAND='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+var SHRINK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+function paintFull(){var on=document.body.classList.contains('clean'),t=on?'Exit full screen':'Full screen';fullBtn.innerHTML=(on?SHRINK:EXPAND)+'<span>'+t+'</span>';fullBtn.setAttribute('aria-label',t)}
+/* iPhones cannot take a web page full screen, so the page button would do nothing useful there. */
+if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&/iPhone|iPod/.test(navigator.userAgent))fullBtn.hidden=true;
 function isFS(){return !!(document.fullscreenElement||document.webkitFullscreenElement)}
 function isClean(){return document.body.classList.contains('clean')}
 function enterFull(){
-  document.body.classList.add('clean');
+  document.body.classList.add('clean');paintFull();
   var el=document.documentElement,rf=el.requestFullscreen||el.webkitRequestFullscreen;
   if(rf){try{var r=rf.call(el);if(r&&r.catch)r.catch(function(){})}catch(e){}}
 }
 function exitFull(){
-  document.body.classList.remove('clean');
+  document.body.classList.remove('clean');paintFull();
   var ex=document.exitFullscreen||document.webkitExitFullscreen;
   if(isFS()&&ex){try{var r=ex.call(document);if(r&&r.catch)r.catch(function(){})}catch(e){}}
 }
 function toggleFull(){if(isClean())exitFull();else enterFull()}
-function onFS(){if(!isFS())document.body.classList.remove('clean')}
+function onFS(){if(!isFS()){document.body.classList.remove('clean');paintFull()}}
 document.addEventListener('fullscreenchange',onFS);document.addEventListener('webkitfullscreenchange',onFS);
-$('#full-btn').addEventListener('click',enterFull);
+fullBtn.addEventListener('click',toggleFull);paintFull();
 $('#lb-full').addEventListener('click',enterFull);
 exitBtn.addEventListener('click',exitFull);
 document.addEventListener('keydown',function(e){
