@@ -201,11 +201,13 @@ body.clean .lb{grid-template-rows:minmax(0,1fr)}
 body.clean .lb-top,body.clean .lb-info,body.clean .buy,body.clean .lb-strip{display:none}
 /* phone held sideways: the viewer becomes just the picture, edge to edge. Swipe for the next one; tap to bring the buttons back. */
 @media (orientation:landscape) and (max-height:520px){
-  .lb{grid-template-rows:minmax(0,1fr);padding:0;overflow:hidden;background:#000}
-  .lb>.lb-stage{padding:0;min-height:0}
+  /* The viewer scrolls a little (the picture stays put) so a swipe up lets Safari tuck its bars away. */
+  .lb{display:block;padding:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#000}
+  .lb::after{content:"";display:block;height:160px}
+  .lb>.lb-stage{padding:0;min-height:0;position:sticky;top:0;height:100%}
   .lb-stage img{inset:0;left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);width:calc(100% - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));height:100%}
   .lb-nav,.lb-info,.buy,.lb-strip,#lb-full,body.clean .lb:not([hidden]) ~ .exit-full{display:none}
-  .lb>.lb-top,body.clean .lb>.lb-top{display:flex;position:absolute;top:0;left:0;right:0;z-index:3;padding:max(8px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));background:linear-gradient(rgba(0,0,0,.65),transparent);opacity:0;pointer-events:none;transition:opacity .25s}
+  .lb>.lb-top,body.clean .lb>.lb-top{display:flex;position:fixed;top:0;left:0;right:0;z-index:3;padding:max(8px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));background:linear-gradient(rgba(0,0,0,.65),transparent);opacity:0;pointer-events:none;transition:opacity .25s}
   .lb.ui>.lb-top,body.clean .lb.ui>.lb-top{opacity:1;pointer-events:auto}
 }
 /* slideshow: black, one photo at a time, built to be mirrored to a TV */
@@ -631,11 +633,11 @@ $('#lb-stage').addEventListener('click',function(){if(!land.matches)return;if(lb
 lb.addEventListener('click',function(e){if(land.matches&&lb.classList.contains('ui')&&e.target.closest('.lb-top'))showUI()});
 var onLand=function(){hideUI()};
 if(land.addEventListener)land.addEventListener('change',onLand);else if(land.addListener)land.addListener(onLand);
-var sx=null;
-$('#lb-stage').addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
+var sx=null,sy=0;
+$('#lb-stage').addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
 $('#lb-stage').addEventListener('touchend',function(e){
-  if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;
-  if(Math.abs(dx)>50)step(dx>0?-1:1);
+  if(sx===null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)step(dx>0?-1:1);
 },{passive:true});
 buyToggle.addEventListener('click',function(){
   var open=buyPanel.hidden;buyPanel.hidden=!open;buyToggle.setAttribute('aria-expanded',String(open));
