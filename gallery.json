@@ -1,0 +1,20 @@
+{
+  "title": "My Pic Show",
+  "short": "MPS",
+  "generated": "2026-11-14T11:57:19Z",
+  "buy": [
+  ],
+  "albums": [
+    {"name":"Test","slug":"test","blurb":"","photos":[
+      {"id":"dsc2958-edit","title":"DSC2958 Edit","ow":4759,"oh":2603,"t":[900,492],"m":[2400,1312],"l":[4759,2603]},
+      {"id":"03397-rockefellercallsitaday-3840x2160","title":"03397 rockefellercallsitaday 3840x2160","ow":3840,"oh":2160,"t":[900,506],"m":[2400,1350],"l":[3840,2160]},
+      {"id":"4k","title":"4K","ow":3840,"oh":2160,"t":[900,506],"m":[2400,1350],"l":[3840,2160]},
+      {"id":"city-dubai-cloud-fog-building-hd-1920x1200","title":"City dubai cloud fog building hd 1920x1200","ow":1920,"oh":1200,"t":[900,562],"m":[1920,1200],"l":[1920,1200]},
+      {"id":"design-wallpapers","title":"Design Wallpapers","ow":2560,"oh":1440,"t":[900,506],"m":[2400,1350],"l":[2560,1440]},
+      {"id":"hd-blue-d-design-desktop-background","title":"Hd Blue D Design Desktop Background","ow":1920,"oh":1080,"t":[900,506],"m":[1920,1080],"l":[1920,1080]},
+      {"id":"night-sky-wallpaper-beautiful-download","title":"Night sky wallpaper beautiful download","ow":1920,"oh":1200,"t":[900,562],"m":[1920,1200],"l":[1920,1200]},
+      {"id":"santorini-greece-2560x1600","title":"Santorini   Greece 2560x1600","ow":2560,"oh":1600,"t":[900,562],"m":[2400,1500],"l":[2560,1600]},
+      {"id":"tumblr-static-6qit6pm7iaw4ooogggkssog44","title":"Tumblr static 6qit6pm7iaw4ooogggkssog44","ow":1920,"oh":1080,"t":[900,506],"m":[1920,1080],"l":[1920,1080]}
+    ]}
+  ]
+}
